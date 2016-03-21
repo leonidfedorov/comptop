@@ -1,37 +1,56 @@
-class DisjSets:
-    class Singleton:
-        def __init__(self, name_value):
-            self.__name = name_value
-            self.size = 1
-            self.parent = self
-        def getName(self):
-            return self.__name
+class DisjointSets:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.size = [0 for x in range(n)]
  
-    __subsets = None
+    def findSet(self, v):
+        if not v == self.parent[v]:
+            self.parent[v] = self.findSet(self.parent[v])
+        return self.parent[v]
  
-    def __init__(self):
-        self.__subsets = {}
- 
-    def MakeSet(self, name):
-        self.__subsets[name] = self.Singleton(name)
- 
-    def Join(self, nameA, nameB):
-        a = self.__subsets[nameA]
-        b = self.__subsets[nameB]
-        pa = self.Find(a)
-        pb = self.Find(b)
-        if pa == pb: 
+    def uniteSets(self, x, y):
+        xLabel = self.findSet(x)
+        yLabel = self.findSet(y)
+        if xLabel == yLabel:
             return
-        parent = pa
-        child = pb
-        if pa.size < pb.size:
-            parent = pb
-            child = pa
-        child.parent = parent
-        parent.size = max(parent.size, child.size + 1)
-    
-    def Find(self, x):
-        if x == x.parent:
-            return x
-        x.parent = self.Find(x.parent)
-        return x.parent
+        if self.size[xLabel] > self.size[yLabel]:
+            self.parent[yLabel] = xLabel
+        else:
+            self.parent[xLabel] = yLabel
+            if self.size[xLabel] == self.size[yLabel]:
+                self.size[yLabel] += 1
+ 
+    def getParent(self):
+        #this will return a list of parents to every vertex, useful for testing
+        return self.parent
+ 
+#Test
+ 
+if __name__ == '__main__':
+    #we create a graph by initiating vertices
+    uf = DisjointSets(9)
+    print uf.getParent()
+    #we create edges between vertices pairwise
+    uf.uniteSets(1, 2)
+    print uf.getParent() #we can see how list of parents changed after Union of vertice sets
+    uf.uniteSets(3, 4)
+    print uf.getParent()
+    uf.uniteSets(4, 1)
+    print uf.getParent()
+    uf.uniteSets(7, 8)
+    print uf.getParent()
+    uf.uniteSets(5, 8)
+    print uf.getParent()
+ 
+    #check the components in resulting graph, because of DisjointSets data structure,
+    #each component has a unique vertex(which we can call 'label' of the set)
+    graph = {}
+    for vertex in range(9): #go through each vertex
+        label = uf.findSet(vertex) #find the 'label' of the set this vertex belongs to
+        if not label in graph: #add component to graph if not already there
+            graph[label] = set([vertex])
+        else: #add vertex to component if it's 'label' vertex is already in the graph
+            graph[label].add(vertex)
+    print("\n Graph has", len(graph), "components: ")
+    for component in graph.values():
+        print(component)
