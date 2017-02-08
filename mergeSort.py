@@ -1,6 +1,4 @@
 ###Standard Merge Sort with branching factor 2 running in 6nlogn + 6n here###
-###just to refurbish an Algorithms class
-###by Leonid Fedorov
 def mergeSort(shuffled_list):
     print("Splitting in 2 branches: ", shuffled_list)
     if len(shuffled_list) > 1:
