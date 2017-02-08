@@ -3,7 +3,7 @@
 ###---------------------------------initializes with 2 lists of points given by tuples of coordinates, 
 ###---------------------------------a distance function and an open ball radius###
 ###---------------------------------computes their adjacency matrix so there's an edge only between classes and only within radius
-###by Leonid Fedorov
+
 
 import numpy as np
 
